@@ -1,21 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>Valid Form</title>
     <link rel="stylesheet" href="./styles/main.scss">
   </head>
+
   <body>
-
+    <!-- form start -->
     <form action="" class="form">
-      <input type="text" class="form__input" placeholder="Your first name!">
-      <input type="text" class="form__input" placeholder="Your last name!">
-      <input type="tel" class="form__input" placeholder="+38(000) 00 00 000">
-      <input type="email" class="form__input" placeholder="Your email!">
-      <input type="password" class="form__input" placeholder="Your password!">
+      <!--form wrapper item start  -->
+      <div class="form__wrapper">
+        <input type="text" class="form__input" id="firstName" placeholder="Your first name!"
+          data-validate-field="firstName">
+        <div class="form__wrapper-message"></div>
+      </div>
+      <!--form wrapper item end  -->
+      <!--form wrapper item start  -->
+      <div class="form__wrapper">
+        <input type="text" class="form__input" id="lastName" placeholder="Your last name!" data-validate-field="lastName">
+        <div class="form__wrapper-message"></div>
+      </div>
+      <!--form wrapper item end  -->
+      <!--form wrapper item start  -->
+      <div class="form__wrapper">
+        <input type="tel" class="form__input" id="phone" placeholder="073 11 22 333" data-validate-field="phone">
+        <div class="form__wrapper-message"></div>
+      </div>
+      <!--form wrapper item end  -->
+      <!--form wrapper item start  -->
+      <div class="form__wrapper">
+        <input type="email" class="form__input" id="email" placeholder="Your email!" data-validate-field="email">
+        <div class="form__wrapper-message"></div>
+      </div>
+      <!--form wrapper item end  -->
+      <!--form wrapper item start  -->
+      <div class="form__wrapper">
+        <input type="password" class="form__input" id="password" placeholder="Your password!"
+          data-validate-field="password">
+        <div class="form__wrapper-message"></div>
+      </div>
+      <!--form wrapper item end  -->
       <button type="submit" class="form__btn">Submit</button>
-    </form>
 
+    </form>
+    <!-- form end -->
+
+    <script src="./scripts/main.js"></script>
   </body>
+
 </html>
