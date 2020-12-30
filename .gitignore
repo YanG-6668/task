@@ -12,5 +12,5 @@ node_modules
 backstop_data
 dist
 .cache
-eslintignore
-eslintrc
+.eslintignore
+.eslintrc

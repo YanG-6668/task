@@ -1,126 +1,97 @@
-// create error/success element (javascript)!!! ------------------------------------------------------------>
-
 export default class ValidationForm {
   constructor(selector, rules) {
     this.form = document.querySelector(selector);
-    this.inputs = this.form.querySelectorAll('.form__input');
-    this.btn = this.form.querySelector('.form__btn');
+    this.firstName = document.querySelector('#firstName');
+    this.lastName = document.querySelector('#lastName');
+    this.phone = document.querySelector('#phone');
+    this.email = document.querySelector('#email');
+    this.password = document.querySelector('#password');
+
     // firstName start
-    this.requiredFirstName = rules.firstName.required;
     this.minLengthFirstName = rules.firstName.minLength;
     this.maxLengthFirstName = rules.firstName.maxLength;
     // firstName end
     // lastName start
-    this.requiredLastName = rules.lastName.required;
     this.minLengthLastName = rules.lastName.minLength;
     this.maxLengthLastName = rules.lastName.maxLength;
     // lastName end
-    // email start
-    this.requiredEmail = rules.email.required;
-    this.checkEmail = rules.email.email;
-    // email end
     //password start
-    this.checkPassword = rules.password.password;
     this.minLengthPassword = rules.password.minLength;
     this.maxLengthPassword = rules.password.maxLength;
     //password end
-    //phone start
-    this.requiredPhone = rules.phone.required;
-    this.checkPhone = rules.phone.phone;
-    //phone end
 
     this.setup();
   }
 
+  checkFirstName() {
+    const firstNameValue = this.firstName.value.trim();
 
-  checkInputs() {
-    this.inputs.forEach(input => {
+    if (!this.isRequired(firstNameValue)) {
+      this.errorMessage(this.firstName, 'First name cannot be empty!')
+    } else if (!this.betweenBorder(firstNameValue.length, this.minLengthFirstName, this.maxLengthFirstName)) {
+      this.errorMessage(this.firstName, `First name must be between ${this.minLengthFirstName} and ${this.maxLengthFirstName} characters.`);
+    } else {
+      this.successMessage(this.firstName);
+    }
+  }
 
-      const value = input.value;
-      const valueLength = input.value.length;
-      const target = input.dataset.validateField;
+  checkLastName() {
+    const lastNameValue = this.lastName.value.trim();
 
-      if (target === 'firstName') {
+    if (!this.isRequired(lastNameValue)) {
+      this.errorMessage(this.lastName, 'Last name cannot be empty!')
+    } else if (!this.betweenBorder(lastNameValue.length, this.minLengthLastName, this.maxLengthLastName)) {
+      this.errorMessage(this.lastName, `Last name must be between ${this.minLengthLastName} and ${this.maxLengthLastName} characters.`);
+    } else {
+      this.successMessage(this.lastName);
+    }
+  }
 
-        if (input.hasAttribute('required')) {
+  checkPhone() {
+    const phoneValue = this.phone.value.trim();
+    const numberOfDigits = 14;
 
-          if (valueLength >= this.minLengthFirstName && valueLength <= this.maxLengthFirstName) {
-            this.successMessage(input);
-          } else {
-            this.errorMessage(input, `Need more than ${this.minLengthFirstName} letters and less than ${this.maxLengthFirstName} letters`);
-          }
+    if (!this.isRequired(phoneValue)) {
+      this.errorMessage(this.phone, 'Phone cannot be empty!')
+    } else if (!this.testPhone(phoneValue) || phoneValue.length > numberOfDigits) {
+      this.errorMessage(this.phone, 'Example: +380732225551')
+    } else {
+      this.successMessage(this.phone);
+    }
+  }
 
-          if (valueLength === 0) {
-            this.errorMessage(input, 'Required input field!');
-          }
-        }
-      }
+  checkEmail() {
+    const emailValue = this.email.value.trim();
 
-      if (target === 'lastName') {
+    if (!this.isRequired(emailValue)) {
+      this.errorMessage(this.email, 'Email cannot be empty!')
+    } else if (!this.testEmail(emailValue)) {
+      this.errorMessage(this.email, 'Example: example@.gmail.com')
+    } else {
+      this.successMessage(this.email);
+    }
+  }
 
-        if (input.hasAttribute('required')) {
+  checkPassword() {
+    const passwordValue = this.password.value.trim();
 
-          if (valueLength >= this.minLengthLastName && valueLength <= this.maxLengthLastName) {
-            this.successMessage(input);
-          } else {
-            this.errorMessage(input, `Need more than ${this.minLengthLastName} letters and less than ${this.minLengthLastName} letters`);
-          }
+    if (!this.isRequired(passwordValue)) {
+      this.errorMessage(this.password, 'Password cannot be empty!')
+    } else if (!this.betweenBorder(passwordValue.length, this.minLengthPassword, this.maxLengthPassword)) {
+      this.errorMessage(this.password, `Last name must be between ${this.minLengthPassword} and ${this.maxLengthPassword} characters.`)
+    } else if (!this.testPassword(passwordValue)) {
+      this.errorMessage(this.password, 'Example: abcd4')
+    } else {
+      this.successMessage(this.password);
+    }
+  }
 
-          if (valueLength === 0) {
-            this.errorMessage(input, 'Required input field!');
-          }
-        }
-      }
+  isRequired(value) {
+    return value === '' ? false : true;
+  }
 
-      if (target === 'email') {
-
-        if (input.hasAttribute('required')) {
-
-          if (this.checkEmail) {
-            if (this.testEmail(value)) {
-              this.successMessage(input);
-            } else {
-              this.errorMessage(input, 'Incorrect email');
-            }
-          }
-
-          if (valueLength === 0) {
-            this.errorMessage(input, 'Required input field!');
-          }
-        }
-      }
-
-      if (target === 'password') {
-
-        if (!(valueLength >= this.minLengthPassword && valueLength <= this.maxLengthPassword)) {
-          this.errorMessage(input, `Need more than ${this.minLengthPassword} letters and less than ${this.maxLengthPassword} letters`);
-        } else if (!this.testPassword(value)) {
-          this.errorMessage(input, 'Example: 1234Aa');
-        } else {
-          this.successMessage(input);
-        }
-
-        if (valueLength === 0) {
-          this.errorMessage(input, 'Required input field!');
-        }
-      }
-
-      if (target === 'phone') {
-        if (input.hasAttribute('required')) {
-
-          if (valueLength === 10 && this.testPhone(value)) {
-            this.successMessage(input);
-          } else {
-            this.errorMessage(input, 'Example: 0731122333');
-          }
-
-          if (valueLength === 0) {
-            this.errorMessage(input, 'Required input field!');
-          }
-        }
-      }
-
-    });
+  betweenBorder(valueLength, valueMin, valueMax) {
+    return valueLength > valueMin && valueLength < valueMax ? true : false;
   }
 
   errorMessage(input, message) {
@@ -153,52 +124,25 @@ export default class ValidationForm {
   }
 
   setup() {
-
-    window.addEventListener('load', () => {
-      this.inputs.forEach(input => {
-
-        const target = input.dataset.validateField;
-
-        if (target === 'firstName') {
-          input.setAttribute('minlength', this.minLengthFirstName);
-          input.setAttribute('maxlength', this.maxLengthFirstName);
-          if (this.requiredFirstName) {
-            input.setAttribute('required', '');
-          }
-        }
-
-        if (target === 'lastName') {
-          input.setAttribute('minlength', this.minLengthLastName);
-          input.setAttribute('maxlength', this.maxLengthLastName);
-          if (this.requiredLastName) {
-            input.setAttribute('required', '');
-          }
-        }
-
-        if (target === 'email') {
-          if (this.requiredEmail) {
-            input.setAttribute('required', '');
-          }
-        }
-
-        if (target === 'password') {
-          input.setAttribute('minlength', this.minLengthPassword);
-          input.setAttribute('maxlength', this.maxLengthPassword);
-          input.setAttribute('required', '');
-        }
-
-        if (target === 'phone') {
-          input.setAttribute('maxlength', '10');
-          if (this.requiredPhone) {
-            input.setAttribute('required', '');
-          }
-        }
-      });
+    this.form.addEventListener('input', e => {
+      const id = e.target.id
+      switch (id) {
+        case 'firstName': this.checkFirstName(); break;
+        case 'lastName': this.checkLastName(); break;
+        case 'phone': this.checkPhone(); break;
+        case 'email': this.checkEmail(); break;
+        case 'password': this.checkPassword(); break;
+      }
     });
 
-    this.form.addEventListener('click', e => {
+    this.form.addEventListener('submit', e => {
       e.preventDefault();
-      this.checkInputs();
+
+      this.checkFirstName();
+      this.checkLastName();
+      this.checkPhone();
+      this.checkEmail();
+      this.checkPassword();
     });
   }
 }
