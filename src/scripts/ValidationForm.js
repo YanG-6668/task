@@ -14,7 +14,6 @@ export default class ValidationForm {
       } else {
         this.successMessage(rule.selector)
       }
-      console.log(this.validCount);
     });
   }
 
